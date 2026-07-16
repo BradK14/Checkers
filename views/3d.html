@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Checkers 3D Starter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+  <link href="/stylesheets/3d.css" rel="stylesheet">
+</head>
+<body>
+  <main class="layout">
+    <header class="panel">
+      <nav class="game-toolbar" aria-label="Game mode switcher">
+        <a class="game-toolbar__link" href="/checkers/2d">2D Game</a>
+        <a class="game-toolbar__link game-toolbar__link--active" href="/checkers/3d" aria-current="page">3D Game</a>
+      </nav>
+      <h1>Checkers 3D Starter</h1>
+      <p class="sub">Minimal Three.js board, pieces, camera, and basic turns.</p>
+      <p id="checkers3d-status">Turn: Player 1</p>
+
+      <section class="stats-card" aria-label="Game Statistics">
+        <h2>Game Statistics</h2>
+        <div class="wrapper">
+          <div id="player1">
+            <h3>Player 1</h3>
+            <p>Captured: <span id="p1-captured">0</span></p>
+            <p>Moves: <span id="p1-moves">0</span></p>
+          </div>
+          <div id="player2">
+            <h3>Player 2</h3>
+            <p>Captured: <span id="p2-captured">0</span></p>
+            <p>Moves: <span id="p2-moves">0</span></p>
+          </div>
+        </div>
+        <div class="turn" aria-label="Current turn indicator"></div>
+        <p class="stats-line">Winner: <span id="checkers3d-winner">None</span></p>
+        <label for="difficulty-select" class="stats-line">
+          CPU Difficulty
+          <select id="difficulty-select">
+            <option value="easy" selected>Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </label>
+        <button id="checkers3d-reset" type="button">Reset Game</button>
+        <p class="hint">Difficulty setting is ready for future CPU move logic.</p>
+      </section>
+    </header>
+
+    <section class="stage-wrap">
+      <div id="checkers3d-canvas" class="stage" aria-label="3D checkers board"></div>
+    </section>
+  </main>
+
+  <script type="module" src="/scripts/3dGame.js"></script>
+</body>
+</html>

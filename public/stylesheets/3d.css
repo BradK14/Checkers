@@ -1,0 +1,237 @@
+:root {
+  --bg-1: #0f1727;
+  --bg-2: #1b2640;
+  --panel: rgba(248, 250, 255, 0.9);
+  --text: #1a1d26;
+  --link: #1f4bd8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: "Space Grotesk", sans-serif;
+  color: var(--text);
+  background: radial-gradient(circle at 20% 10%, #2f456f 0%, var(--bg-2) 35%, var(--bg-1) 100%);
+}
+
+.layout {
+  min-height: 100%;
+  display: grid;
+  grid-template-columns: minmax(240px, 360px) minmax(300px, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.panel {
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2);
+}
+
+.game-toolbar {
+  display: inline-flex;
+  gap: 0.4rem;
+  padding: 0.3rem;
+  margin-bottom: 1rem;
+  border-radius: 999px;
+  background: rgba(21, 31, 52, 0.08);
+}
+
+.game-toolbar__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 7rem;
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  color: #23345a;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 0.15s linear, color 0.15s linear, box-shadow 0.15s linear;
+}
+
+.game-toolbar__link:hover {
+  text-decoration: none;
+  background: rgba(31, 75, 216, 0.12);
+}
+
+.game-toolbar__link--active {
+  color: #f8faff;
+  background: linear-gradient(135deg, #2d62ff 0%, #1f4bd8 100%);
+  box-shadow: 0 6px 18px rgba(31, 75, 216, 0.28);
+}
+
+.game-toolbar__link--active:hover {
+  background: linear-gradient(135deg, #2d62ff 0%, #1f4bd8 100%);
+}
+
+h1 {
+  margin: 0 0 0.4rem;
+}
+
+.sub {
+  margin: 0 0 1rem;
+}
+
+.links a {
+  color: var(--link);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
+#checkers3d-status {
+  margin-top: 1rem;
+  font-weight: 700;
+}
+
+.stats-card {
+  margin-top: 1rem;
+  border-radius: 10px;
+  padding: 0.9rem;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.stats-card h2 {
+  margin: 0 0 0.7rem;
+}
+
+.stats-card .wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+
+.stats-card #player1,
+.stats-card #player2 {
+  padding: 0.6rem;
+  border-radius: 8px;
+}
+
+.stats-card #player1 h3,
+.stats-card #player2 h3 {
+  margin: 0 0 0.4rem;
+}
+
+.stats-card #player1 p,
+.stats-card #player2 p {
+  margin: 0.2rem 0;
+}
+
+.stats-card #player1 {
+  background: linear-gradient(135deg, #f0a4a4 0%, #de7373 100%);
+  color: #1f1f24;
+}
+
+.stats-card #player2 {
+  background: linear-gradient(135deg, #1d2434 0%, #323d57 100%);
+  color: #f4f7ff;
+}
+
+.stats-card .turn {
+  height: 10px;
+  width: 100%;
+  margin-top: 0.7rem;
+  border-radius: 0 0 8px 8px;
+  background: linear-gradient(to right, #9ee37d 50%, transparent 50%);
+}
+
+.stats-line {
+  display: block;
+  margin: 0.75rem 0 0;
+  font-weight: 700;
+}
+
+#difficulty-select {
+  width: 100%;
+  margin-top: 0.4rem;
+  border: 1px solid #95a0c0;
+  border-radius: 6px;
+  padding: 0.45rem;
+  font: inherit;
+  background: #f8faff;
+}
+
+#checkers3d-reset {
+  display: block;
+  width: 100%;
+  margin: 0.85rem 0 0;
+  padding: 0.65rem;
+  border: 0;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #2d62ff 0%, #1f4bd8 100%);
+  color: #f8faff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(25, 57, 163, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+#checkers3d-reset:hover {
+  filter: brightness(1.05);
+  box-shadow: 0 8px 18px rgba(25, 57, 163, 0.28);
+}
+
+#checkers3d-reset:active {
+  transform: translateY(1px);
+}
+
+.hint {
+  margin: 0.55rem 0 0;
+  opacity: 0.8;
+  font-size: 0.92rem;
+}
+
+.stage-wrap {
+  min-height: 80vh;
+}
+
+.stage {
+  height: 100%;
+  min-height: 520px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
+}
+
+.stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .game-toolbar {
+    width: 100%;
+  }
+
+  .game-toolbar__link {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .stats-card .wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .stage {
+    min-height: 68vh;
+  }
+}

@@ -1,0 +1,510 @@
+:root {
+  --c-bg-1: #0f1727;
+  --c-bg-2: #1b2640;
+  --c-panel: rgba(248, 250, 255, 0.92);
+  --c-text: #1a1d26;
+  --c-link: #1f4bd8;
+  --c-accent: #2d62ff;
+  --c-accent-hover: #1f4dd6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  position: static;
+  height: auto;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  color: var(--c-text);
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 16px;
+  background: radial-gradient(circle at 18% 8%, #2f456f 0%, var(--c-bg-2) 35%, var(--c-bg-1) 100%);
+}
+
+html h1, body h1 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+html h2, body h2 {
+  margin: 0;
+  font-size: 1.3em;
+}
+
+html h3, body h3 {
+  font-size: 1.1em;
+  margin: 0;
+}
+
+html a, body a {
+  text-decoration: none;
+  color: var(--c-link);
+  font-weight: 700;
+}
+
+html a:hover, body a:hover {
+  text-decoration: underline;
+}
+
+html hr, body hr {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(to right, rgba(31, 75, 216, 0.9), rgba(31, 75, 216, 0.1));
+}
+
+html .clearfix, body .clearfix {
+  clear: both;
+}
+
+body {
+  display: grid;
+  grid-template-columns: minmax(240px, 360px) minmax(300px, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+  min-height: 100vh;
+}
+
+div.column {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+div.column:first-child {
+  grid-column: 1;
+}
+
+div.column:last-child {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+
+@media screen and (max-width: 900px) {
+  body {
+    grid-template-columns: 1fr;
+  }
+
+  .game-toolbar {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .game-toolbar__link {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  /*
+  Blueprint (mobile): If spinner is enabled, center it below toolbar links.
+  Step A: Give spinner full width.
+  Step B: Center content and add top padding.
+  .game-toolbar__spinner {
+    width: 100%;
+    justify-content: center;
+    padding: 0.15rem 0 0.1rem;
+  }
+  */
+
+  div.column:last-child {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+
+/* Info and Stats Cards */
+div.info,
+div.stats {
+  background: var(--c-panel);
+  color: var(--c-text);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+}
+
+div.info {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.game-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.3rem;
+  margin-bottom: 1rem;
+  border-radius: 999px;
+  background: rgba(21, 31, 52, 0.08);
+  max-width: 100%;
+}
+
+.game-toolbar__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 7rem;
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  color: #23345a;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 0.15s linear, color 0.15s linear, box-shadow 0.15s linear;
+}
+
+.game-toolbar__link:hover {
+  text-decoration: none;
+  background: rgba(31, 75, 216, 0.12);
+}
+
+.game-toolbar__link--active {
+  color: #f8faff;
+  background: linear-gradient(135deg, #2d62ff 0%, #1f4bd8 100%);
+  box-shadow: 0 6px 18px rgba(31, 75, 216, 0.28);
+}
+
+.game-toolbar__link--active:hover {
+  background: linear-gradient(135deg, #2d62ff 0%, #1f4bd8 100%);
+}
+
+/*
+Blueprint (desktop/shared): Spinner appearance and animation while toolbar has loading class.
+Step A: Define base spinner layout and hidden default state.
+Step B: Define visible state under .game-toolbar--loading.
+Step C: Define dot style and spin animation.
+.game-toolbar__spinner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0 0.55rem 0 0.25rem;
+  color: #23345a;
+  font-size: 0.88rem;
+  font-weight: 700;
+  opacity: 0;
+  transform: translateX(-0.2rem);
+  pointer-events: none;
+  transition: opacity 0.18s linear, transform 0.18s linear;
+}
+
+.game-toolbar--loading .game-toolbar__spinner {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.game-toolbar__spinner-dot {
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 999px;
+  border: 2px solid rgba(35, 52, 90, 0.22);
+  border-top-color: #2d62ff;
+  animation: game-toolbar-spin 0.8s linear infinite;
+}
+
+.game-toolbar__spinner-label {
+  white-space: nowrap;
+}
+
+@keyframes game-toolbar-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+*/
+
+div.stats {
+  margin: 0;
+}
+
+div.stats .wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  margin: 0.75rem 0;
+}
+
+div.stats #player1,
+div.stats #player2 {
+  padding: 0.6rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+div.stats #player1 h3,
+div.stats #player2 h3 {
+  margin: 0 0 0.4rem;
+}
+
+div.stats #player1 p,
+div.stats #player2 p {
+  margin: 0.2rem 0;
+  text-align: center;
+}
+
+div.stats #player1 {
+  background: linear-gradient(135deg, #f0a4a4 0%, #de7373 100%);
+  color: #1f1f24;
+}
+
+div.stats #player1 .capturedPiece {
+  width: 2.4vmin;
+  height: 2.4vmin;
+  background-color: #232621;
+  background-size: 65%;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 6vmin;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  transition: all 0.2s linear;
+  margin: 5px;
+  box-shadow: inset 0 0.2vmin 0.2vmin rgba(255, 255, 255, 0.25), inset 0 -0.25vmin 0.2vmin rgba(0, 0, 0, 0.45), 0 0.2vmin 0.25vmin rgba(0, 0, 0, 0.35);
+}
+
+div.stats #player2 {
+  background: linear-gradient(135deg, #1d2434 0%, #323d57 100%);
+  color: #f4f7ff;
+}
+
+div.stats #player2 .capturedPiece {
+  width: 2.4vmin;
+  height: 2.4vmin;
+  background-color: #B93848;
+  background-size: 65%;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 6vmin;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  transition: all 0.2s linear;
+  margin: 5px;
+  box-shadow: inset 0 0.2vmin 0.2vmin rgba(255, 255, 255, 0.4), inset 0 -0.25vmin 0.2vmin rgba(0, 0, 0, 0.35), 0 0.2vmin 0.25vmin rgba(0, 0, 0, 0.35);
+}
+
+div.stats div.turn {
+  height: 10px;
+  width: 100%;
+  border-radius: 0 0 8px 8px;
+  background: linear-gradient(to right, #9ee37d 50%, transparent 50%);
+}
+
+div.stats span#winner {
+  display: block;
+  margin-top: 0.75rem;
+  font-weight: 700;
+}
+
+div.stats button#cleargame {
+  display: block;
+  border: 0;
+  width: 100%;
+  color: #F1F1FF;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 0.75rem 0;
+  padding: 0.6rem;
+  background: var(--c-accent);
+  box-shadow: 0 4px 14px rgba(25, 57, 163, 0.35);
+  transition: background-color 0.15s linear;
+  font-weight: 700;
+}
+
+div.stats button#cleargame:hover {
+  background: var(--c-accent-hover);
+}
+
+div.stats .save-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.45rem;
+  margin: 0.75rem 0 0.45rem;
+}
+
+div.stats .save-actions button {
+  border: 0;
+  width: 100%;
+  color: #f1f1ff;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 0.55rem;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(25, 57, 163, 0.28);
+  transition: transform 0.1s linear, filter 0.15s linear;
+}
+
+div.stats button#savegame {
+  background: linear-gradient(135deg, #2f7d4a 0%, #25643c 100%);
+}
+
+div.stats button#resumegame {
+  background: linear-gradient(135deg, #226485 0%, #1e5170 100%);
+}
+
+div.stats .save-actions button:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+div.stats span#save-status {
+  display: block;
+  min-height: 1.15rem;
+  font-size: 0.92rem;
+  color: #344058;
+}
+
+div.stats label {
+  display: block;
+  margin: 0.45rem 0;
+}
+
+#cpu-difficulty-select {
+  width: 100%;
+  margin-top: 0.4rem;
+  border: 1px solid #95a0c0;
+  border-radius: 6px;
+  padding: 0.45rem;
+  font: inherit;
+  background: #f8faff;
+}
+
+#cpu-difficulty-select:disabled {
+  background-color: #e5e8f2;
+  color: #697089;
+  cursor: not-allowed;
+}
+
+/* Game Board */
+div#board {
+  position: relative;
+  width: 80vmin;
+  height: 80vmin;
+  margin: 1rem auto;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.34);
+  background: linear-gradient(145deg, #b68562 0%, #966743 100%);
+  overflow: hidden;
+  max-width: 100%;
+  flex-shrink: 0;
+}
+
+div#board .tile {
+  width: 10vmin;
+  height: 10vmin;
+  position: absolute;
+  background: linear-gradient(155deg, #2a3348 0%, #171d2b 100%);
+}
+
+div#board .player1pieces .piece,
+div#board .player2pieces .piece {
+  position: absolute;
+  width: 8vmin;
+  height: 8vmin;
+  background-size: 65%;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 6vmin;
+  display: inline-block;
+  overflow: hidden;
+  box-sizing: border-box;
+  transition: all 0.2s linear;
+  margin-top: 1vmin;
+  margin-left: 1vmin;
+  cursor: pointer;
+  box-shadow: inset 0 0.5vmin 0.5vmin rgba(255, 255, 255, 0.35), inset 0 -0.6vmin 0.7vmin rgba(0, 0, 0, 0.35), 0 0.35vmin 0.45vmin rgba(0, 0, 0, 0.4);
+}
+
+div#board .player1pieces .piece {
+  background-color: #e4a6ae;
+  border: 1vmin solid #a02f3d;
+}
+
+div#board .player2pieces .piece {
+  background-color: #F1F1FF;
+  border: 1vmin solid #8b8bff;
+  box-shadow: inset 0 0.5vmin 0.5vmin rgba(255, 255, 255, 0.45), inset 0 -0.6vmin 0.7vmin rgba(0, 0, 0, 0.28), 0 0.35vmin 0.45vmin rgba(0, 0, 0, 0.4);
+}
+
+div#board .player1pieces .piece.selected,
+div#board .player2pieces .piece.selected {
+  box-shadow: 0 0 12px 6px #67c3ff;
+}
+
+@keyframes cpu-pulse {
+  0% {
+    box-shadow: 0 0 5px 2px #FFD700;
+  }
+  50% {
+    box-shadow: 0 0 15px 5px #FFD700;
+  }
+  100% {
+    box-shadow: 0 0 5px 2px #FFD700;
+  }
+}
+
+div#board .piece.cpu-thinking {
+  animation: cpu-pulse 0.6s ease-in-out;
+}
+
+div#board .piece::before,
+div#board .piece::after,
+div.stats .capturedPiece::before,
+div.stats .capturedPiece::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+div#board .piece::before {
+  inset: 0.9vmin;
+  border: 0.35vmin solid rgba(255, 255, 255, 0.28);
+  box-shadow: inset 0 -0.4vmin 0.6vmin rgba(0, 0, 0, 0.2);
+}
+
+div#board .piece::after {
+  width: 3.2vmin;
+  height: 1.7vmin;
+  top: 1.15vmin;
+  left: 1.45vmin;
+  transform: rotate(-20deg);
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.1) 70%, rgba(255, 255, 255, 0) 100%);
+}
+
+div.stats .capturedPiece::before {
+  inset: 0.35vmin;
+  border: 0.15vmin solid rgba(255, 255, 255, 0.25);
+}
+
+div.stats .capturedPiece::after {
+  width: 1vmin;
+  height: 0.55vmin;
+  top: 0.35vmin;
+  left: 0.45vmin;
+  transform: rotate(-20deg);
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+@media screen and (max-width: 900px) {
+  div.stats .wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  div#board {
+    width: 90vmin;
+    height: 90vmin;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  div#board {
+    width: 95vw;
+    height: 95vw;
+    margin: 0.5rem auto;
+  }
+}

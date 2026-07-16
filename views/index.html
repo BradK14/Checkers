@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+<head>
+  <title>JS Checkers</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+  <link href="/stylesheets/style.css" rel="stylesheet">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="icon" href="favicon.png" type="image/x-icon">
+  <script type="module" src="/scripts/2dGame.js"></script>
+</head>
+<body>
+  <div class="column">
+    <div class="info">
+      <nav class="game-toolbar" aria-label="Game mode switcher">
+        <a class="game-toolbar__link game-toolbar__link--active" href="/checkers/2d" aria-current="page">2D Game</a>
+        <a class="game-toolbar__link" href="/checkers/3d">3D Game</a>
+        <!--
+        Blueprint: Add this status indicator if you want visible feedback while waiting for CPU/API responses.
+        Step A: Keep the wrapper span with a unique id.
+        Step B: Add a visual dot element for animation.
+        Step C: Add readable label text for accessibility.
+        <span class="game-toolbar__spinner" id="cpu-loading-indicator" aria-live="polite" aria-hidden="true">
+          <span class="game-toolbar__spinner-dot" aria-hidden="true"></span>
+          <span class="game-toolbar__spinner-label">CPU thinking</span>
+        </span>
+        -->
+      </nav>
+      <h1>Checkers</h1>
+      <hr>
+      <p>Made by Yuriy Ivanov for <a href=https://www.suny.edu/">SUNY</a> 2025.</p>
+      <p>Open source MIT license.</p>
+
+    </div>
+    <div class="stats stats-card">
+      <h2>Game Statistics</h2>
+      <div class="wrapper">
+      <div id="player1">
+        <h3>Player 1 (Top)</h3>
+      </div>
+      <div id="player2">
+        <h3>Player 2 (Bottom)</h3>
+      </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="turn"></div>
+      <span id="winner"></span>
+      <!--
+      <label for="cpu-toggle">
+        <input type="checkbox" id="cpu-toggle">
+        2 Player Mode (no CPU)
+      </label>
+      <label for="animation-toggle">
+        <input type="checkbox" id="animation-toggle" checked>
+        Show CPU move animation
+      </label>
+      <label for="cpu-difficulty-select">
+        CPU Difficulty
+        <select id="cpu-difficulty-select">
+          <option value="easy" selected>Easy</option>
+          <option value="hard">Hard</option>
+        </select>
+      </label>
+      <div class="save-actions" role="group" aria-label="Saved game actions">
+        <button id="savegame" type="button">Save Game</button>
+        <button id="resumegame" type="button">Resume Saved Game</button>
+      </div>
+      <span id="save-status" aria-live="polite"></span>
+      <button id="cleargame">Reset Game</button>
+      -->
+    </div>
+  </div>
+  <div class="column">
+    <div id="board">
+      <div class="tiles"></div>
+      <div class="pieces">
+        <div class="player1pieces">
+        </div>
+        <div class="player2pieces">
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
