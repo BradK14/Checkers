@@ -54,6 +54,7 @@ app.use(express.static(path.join(rootDir, "public")));
 
 app.get('/checkers', (req, res) => {
 	// Step 5.1: Redirect the base checkers route to the 2D game.
+	res.redirect('/checkers/2d');
 });
 
 app.get('/checkers/2d', (req, res) => {
@@ -62,9 +63,15 @@ app.get('/checkers/2d', (req, res) => {
 
 app.get('/checkers/3d', (req, res) => {
 	// Step 7.1: Send the 3D game HTML file.
+	res.sendFile(path.join(rootDir, "views", "3d.html"));
 });
 
 app.get('/api/checkers/2d/save', async (req, res) => {
+	console.log('save GET request');
+	return res.status(201).json({
+		success: true,
+		message: 'Hello World'
+	});
 	// Step 8.1: Read saved game JSON from disk.
 	// Step 8.2: Return the parsed payload.
 	// Step 8.3: Return 404 when no save exists.
@@ -72,6 +79,11 @@ app.get('/api/checkers/2d/save', async (req, res) => {
 });
 
 app.post('/api/checkers/2d/save', async (req, res) => {
+	console.log('save POST request');
+	return res.status(201).json({
+		success: true,
+		message: 'Hello World'
+	});
 	// Step 9.1: Read state from request body.
 	// Step 9.2: Validate incoming game state.
 	// Step 9.3: Add savedAt timestamp.
@@ -92,9 +104,11 @@ app.post('/api/checkers/2d/cpu-move', withThrottle(async (req, res) => {
 
 app.get('/', (req, res) => {
 	// Step 11.1: Redirect the site root to the 2D game.
+	res.redirect('/checkers/2d');
 });
 
 app.listen(PORT, () => {
 	// Step 12.1: Start the Express server on the configured port.
+	console.log(`Checkers game at: http://localhost:${PORT}/checkers/2d`);
 	// Step 12.2: Log helpful startup information, such as URLs and API key availability.
 });

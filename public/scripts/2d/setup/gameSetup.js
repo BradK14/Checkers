@@ -9,7 +9,7 @@ export function initializeGame() {
     const tiles = game.tiles;
 
     // Blueprint order for implementation:
-    // Step 1: Implement setSaveStatus.
+    // DONE Step 1: Implement setSaveStatus.
     // Step 2: Implement persistState.
     // Step 3: Implement fetchSavedState.
     // Step 4: Implement syncPlayModeControls.
@@ -31,14 +31,28 @@ export function initializeGame() {
     function setSaveStatus(message, isError) {
       if (!dom.saveStatus) return;
       // Step 1.1: Set status text for save/resume actions.
+      dom.saveStatus.textContent = message;
       // Step 1.2: Use error color when isError is true, otherwise use normal status color.
+      if (isError){
+        dom.saveStatus.style.color = `rgb(255, 0, 0)`;
+      }
+      else{
+        dom.saveStatus.style.color = `rgb(0, 255, 0)`;
+      }
     }
 
     async function persistState(state) {
       // Step 2.1: POST { state } to /api/checkers/2d/save.
+        const response = await fetch("/api/checkers/2d/save", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({state: state})
+        });
       // Step 2.2: Throw if response is not OK.
       // Step 2.3: Return parsed JSON payload from the save API.
-      return null;
+      return response.json();
     }
 
     async function fetchSavedState() {
@@ -99,7 +113,9 @@ export function initializeGame() {
     if (dom.saveButton) {
       dom.saveButton.addEventListener('click', async function () {
         // Step 7.1: Build serializable board state and persist it via API.
+        const response = await persistState(Board.buildSerializableState);
         // Step 7.2: Show success status with saved timestamp.
+        setSaveStatus('test', false);
         // Step 7.3: Handle errors and show an error status message.
       });
     }
@@ -145,15 +161,13 @@ export function initializeGame() {
     });
 
     document.addEventListener('click', function (event) {
-      /*
-      Step 10.1: Ignore non-tile clicks.
-      Step 10.2: Ignore input when CPU controls current turn.
-      Step 10.3: Read currently selected piece.
-      Step 10.4: Resolve tile + piece objects and validate move range.
-      Step 10.5: Handle jump moves and chained jumps.
-      Step 10.6: Handle regular moves when jumps are not forced.
-      Step 10.7: Switch turns after successful move.
-      */
+      // Step 10.1: Ignore non-tile clicks.
+      // Step 10.2: Ignore input when CPU controls current turn.
+      // Step 10.3: Read currently selected piece.
+      // Step 10.4: Resolve tile + piece objects and validate move range.
+      // Step 10.5: Handle jump moves and chained jumps.
+      // Step 10.6: Handle regular moves when jumps are not forced.
+      // Step 10.7: Switch turns after successful move.
     });
 
 }
