@@ -51,6 +51,9 @@ export function initializeGame() {
           body: JSON.stringify({state: state})
         });
       // Step 2.2: Throw if response is not OK.
+      if(!response.ok){
+        throw new Error(`Error ${response.status}`);
+      }
       // Step 2.3: Return parsed JSON payload from the save API.
       return response.json();
     }
@@ -114,8 +117,10 @@ export function initializeGame() {
       dom.saveButton.addEventListener('click', async function () {
         // Step 7.1: Build serializable board state and persist it via API.
         const response = await persistState(Board.buildSerializableState);
+        console.log(response);
+        const message = response.date;
         // Step 7.2: Show success status with saved timestamp.
-        setSaveStatus('test', false);
+        setSaveStatus(message, false);
         // Step 7.3: Handle errors and show an error status message.
       });
     }

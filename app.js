@@ -81,7 +81,7 @@ app.get('/api/checkers/2d/save', async (req, res) => {
 app.post('/api/checkers/2d/save', async (req, res) => {
 	console.log('save POST request');
 	return res.status(201).json({
-		success: true,
+		date: new Date(),
 		message: 'Hello World'
 	});
 	// Step 9.1: Read state from request body.
