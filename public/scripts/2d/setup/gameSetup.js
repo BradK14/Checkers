@@ -10,12 +10,12 @@ export function initializeGame() {
 
     // Blueprint order for implementation:
     // DONE Step 1: Implement setSaveStatus.
-    // Step 2: Implement persistState.
+    // DONE Step 2: Implement persistState.
     // Step 3: Implement fetchSavedState.
     // Step 4: Implement syncPlayModeControls.
     // Step 5: Implement syncControlsFromBoardState.
     // Step 6: Implement CPU-related control listeners.
-    // Step 7: Implement save button flow.
+    // DONE Step 7: Implement save button flow.
     // Step 8: Implement resume button flow.
     // Step 9: Implement reset flow.
     // Step 10: Implement tile click move flow.
@@ -52,7 +52,7 @@ export function initializeGame() {
         });
       // Step 2.2: Throw if response is not OK.
       if(!response.ok){
-        throw new Error(`Error ${response.status}`);
+        throw new Error(`${response.status} failed to save`);
       }
       // Step 2.3: Return parsed JSON payload from the save API.
       return response.json();
@@ -116,12 +116,16 @@ export function initializeGame() {
     if (dom.saveButton) {
       dom.saveButton.addEventListener('click', async function () {
         // Step 7.1: Build serializable board state and persist it via API.
-        const response = await persistState(Board.buildSerializableState);
-        console.log(response);
-        const message = response.date;
-        // Step 7.2: Show success status with saved timestamp.
-        setSaveStatus(message, false);
-        // Step 7.3: Handle errors and show an error status message.
+        try{
+          const response = await persistState(Board.buildSerializableState());
+          const message = `${response.message} ${response.date}`;
+          // Step 7.2: Show success status with saved timestamp.
+          setSaveStatus(message, response.state === null);
+        }
+        catch(error){
+          // Step 7.3: Handle errors and show an error status message.
+          setSaveStatus("Failed to save", true);
+        }
       });
     }
 

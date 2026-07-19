@@ -37,14 +37,28 @@ function withThrottle(handler) {
 
 async function ensureSavesDirectory() {
 	// Step 3.1: Create the save directory if it does not already exist.
+	await fs.mkdir(savesDir, {recursive: true});
 }
 
 function isValid2dGameState(state) {
 	// Step 4.1: Confirm state is an object.
+	if (typeof state !== 'object'){
+		return false;
+	}
 	// Step 4.2: Confirm board is an 8x8 array.
+	if (state.board.length !== 8){
+		return false;
+	}
 	// Step 4.3: Confirm pieces is an array.
+	if (!Array.isArray(state.pieces)){
+		return false;
+	}
 	// Step 4.4: Confirm score, if present, is an object.
-	return false;
+	if (typeof state.score !== 'object'){
+		return false;
+	}
+
+	return true;
 }
 
 app.use(express.json({ limit: '1mb' }));
@@ -79,17 +93,35 @@ app.get('/api/checkers/2d/save', async (req, res) => {
 });
 
 app.post('/api/checkers/2d/save', async (req, res) => {
-	console.log('save POST request');
-	return res.status(201).json({
-		date: new Date(),
-		message: 'Hello World'
-	});
 	// Step 9.1: Read state from request body.
+	const {state} = req.body;
 	// Step 9.2: Validate incoming game state.
+	if (!isValid2dGameState(state)) {
+		return res.status(400).json({ message: 'Invalid game state' });
+	}
 	// Step 9.3: Add savedAt timestamp.
+	const date = new Date();
 	// Step 9.4: Ensure save directory exists.
+	await ensureSavesDirectory();
 	// Step 9.5: Write JSON payload to disk.
-	// Step 9.6: Return created payload or 500 on failure.
+	const resData = {
+		date: date,
+		message: 'SAVED',
+		state
+	}
+
+	try{
+		await fs.writeFile(twoDGameSavePath, JSON.stringify(resData));
+		// Step 9.6: Return created payload or 500 on failure.
+		return res.status(201).json(resData);
+	}
+	catch(error){
+		return res.status(500).json({
+			date: date,
+			message: 'FAILED TO SAVE',
+			state: null
+		})
+	}
 });
 
 app.post('/api/checkers/2d/cpu-move', withThrottle(async (req, res) => {
