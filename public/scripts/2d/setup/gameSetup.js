@@ -12,12 +12,12 @@ export function initializeGame() {
     // DONE Step 1: Implement setSaveStatus.
     // DONE Step 2: Implement persistState.
     // Step 3: Implement fetchSavedState.
-    // Step 4: Implement syncPlayModeControls.
-    // Step 5: Implement syncControlsFromBoardState.
+    // DONE Step 4: Implement syncPlayModeControls.
+    // DONE Step 5: Implement syncControlsFromBoardState.
     // Step 6: Implement CPU-related control listeners.
     // DONE Step 7: Implement save button flow.
     // Step 8: Implement resume button flow.
-    // Step 9: Implement reset flow.
+    // DONE Step 9: Implement reset flow.
     // Step 10: Implement tile click move flow.
 
     function clearSelectedPieces() {
@@ -69,20 +69,26 @@ export function initializeGame() {
     function syncPlayModeControls() {
       const twoPlayerMode = dom.cpuToggle ? dom.cpuToggle.checked : false;
       // Step 4.1: Map toggle value to Board.cpuEnabled.
+      Board.cpuEnabled = !twoPlayerMode;
       if (dom.cpuDifficultySelect) {
         // Step 4.2: Disable difficulty selector when two-player mode is enabled.
+        dom.cpuDifficultySelect.disabled = twoPlayerMode;
       }
     }
 
     function syncControlsFromBoardState() {
       if (dom.cpuToggle) {
         // Step 5.1: Reflect Board.cpuEnabled in the CPU toggle UI.
+        Board.cpuToggle.checked = !Board.cpuEnabled;
       }
       if (dom.cpuDifficultySelect) {
         // Step 5.2: Reflect Board.cpuDifficulty and enabled/disabled state in dropdown.
+        dom.cpuDifficultySelect.value = Board.cpuDifficulty;
+        dom.cpuDifficultySelect.disabled = !Board.cpuEnabled;
       }
       if (dom.animationToggle) {
         // Step 5.3: Reflect Board.showCpuAnimation in animation toggle UI.
+        dom.animationToggle.checked = Board.showCpuAnimation;
       }
     }
 
@@ -141,6 +147,7 @@ export function initializeGame() {
     if (dom.clearButton) {
       dom.clearButton.addEventListener('click', function () {
         // Step 9.1: Reset the board to initial game state.
+        Board.clear();
       });
     }
 
@@ -171,9 +178,15 @@ export function initializeGame() {
 
     document.addEventListener('click', function (event) {
       // Step 10.1: Ignore non-tile clicks.
+      const tileEl = event.target.closest('.tile');
+      if (!tileEl) { return; }
       // Step 10.2: Ignore input when CPU controls current turn.
+      if (Board.cpuEnabled && Board.playerTurn === 2) { return; }
       // Step 10.3: Read currently selected piece.
+      const selectedPiece = document.getElementsByClassName('selected')[0];
+      if (!selectedPiece) { return; }
       // Step 10.4: Resolve tile + piece objects and validate move range.
+      // if (Board.jumpexist)
       // Step 10.5: Handle jump moves and chained jumps.
       // Step 10.6: Handle regular moves when jumps are not forced.
       // Step 10.7: Switch turns after successful move.
