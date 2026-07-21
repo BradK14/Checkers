@@ -180,16 +180,52 @@ export function initializeGame() {
       // Step 10.1: Ignore non-tile clicks.
       const tileEl = event.target.closest('.tile');
       if (!tileEl) { return; }
+      const tile = tiles[tileEl.id.replace(/tile/, '')];
       // Step 10.2: Ignore input when CPU controls current turn.
       if (Board.cpuEnabled && Board.playerTurn === 2) { return; }
       // Step 10.3: Read currently selected piece.
       const selectedPiece = document.getElementsByClassName('selected')[0];
       if (!selectedPiece) { return; }
+      const piece = pieces[selectedPiece.id];
       // Step 10.4: Resolve tile + piece objects and validate move range.
-      // if (Board.jumpexist)
+      const jumpOnly = Board.jumpexist;
+      const legalTiles = Board.getLegalMovesForPiece(piece, jumpOnly);
+      // const moveType = tileEl.inRange(selectedPiece);
+      let legal = false;
+      for (let ti of legalTiles){
+        if (tile === ti.tile){
+          legal = true;
+          break;
+        }
+      }
       // Step 10.5: Handle jump moves and chained jumps.
-      // Step 10.6: Handle regular moves when jumps are not forced.
-      // Step 10.7: Switch turns after successful move.
+      if (legal){
+      // if (moveType !== 'wrong'){
+      //   if (jumpOnly && moveType === 'jump'){
+      //     selectedPiece.opponentJump(tileEl);
+      //   }
+        // Step 10.6: Handle regular moves when jumps are not forced.
+        piece.move(tile);
+        // Step 10.7: Switch turns after successful move.
+        if (jumpOnly){
+          const nextSpotTiles = Board.getLegalMovesForPiece(piece, jumpOnly);
+          let moreJumps = false;
+          for (let ti of nextSpotTiles){
+            if (ti.type === 'jump'){
+              moreJumps = true;
+            }
+          }
+          if (moreJumps) {
+            Board.changePlayerTurn();
+          }
+          else{
+            Board.continuousjump = true;
+          }
+        }
+        else{
+          Board.changePlayerTurn();
+        }
+      }
     });
 
 }
