@@ -81,15 +81,21 @@ app.get('/checkers/3d', (req, res) => {
 });
 
 app.get('/api/checkers/2d/save', async (req, res) => {
-	console.log('save GET request');
-	return res.status(201).json({
-		success: true,
-		message: 'Hello World'
-	});
-	// Step 8.1: Read saved game JSON from disk.
-	// Step 8.2: Return the parsed payload.
-	// Step 8.3: Return 404 when no save exists.
-	// Step 8.4: Return 500 for other read/parse errors.
+	try{
+		// Step 8.1: Read saved game JSON from disk.
+		const saveFile = await fs.readFile(twoDGameSavePath);
+		// Step 8.2: Return the parsed payload.
+		return res.status(201).json(JSON.parse(saveFile));
+	}
+	catch(error){
+		// Step 8.3: Return 404 when no save exists.
+		if (error.code === 'ENOENT') {
+			return res.status(404).json({ message: `No save data: ${error.name}.  ${error.message}` });
+		}
+		// Step 8.4: Return 500 for other read/parse errors.
+		return res.status(500).json({ message: `Failed to retrieve save data: ${error.name}.  ${error.message}`});
+	}
+	
 });
 
 app.post('/api/checkers/2d/save', async (req, res) => {

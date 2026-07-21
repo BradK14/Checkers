@@ -11,14 +11,14 @@ export function initializeGame() {
     // Blueprint order for implementation:
     // DONE Step 1: Implement setSaveStatus.
     // DONE Step 2: Implement persistState.
-    // Step 3: Implement fetchSavedState.
+    // DONE Step 3: Implement fetchSavedState.
     // DONE Step 4: Implement syncPlayModeControls.
     // DONE Step 5: Implement syncControlsFromBoardState.
     // Step 6: Implement CPU-related control listeners.
     // DONE Step 7: Implement save button flow.
-    // Step 8: Implement resume button flow.
+    // DONE Step 8: Implement resume button flow.
     // DONE Step 9: Implement reset flow.
-    // Step 10: Implement tile click move flow.
+    // DONE Step 10: Implement tile click move flow.
 
     function clearSelectedPieces() {
       document.querySelectorAll('.piece').forEach(function (pieceEl) {
@@ -60,10 +60,16 @@ export function initializeGame() {
 
     async function fetchSavedState() {
       // Step 3.1: GET /api/checkers/2d/save.
+      const response = await fetch('/api/checkers/2d/save');
       // Step 3.2: Return null for 404 (no save exists).
+      if (response.status === '404') { return null; }
       // Step 3.3: Throw for other non-OK responses.
+      if (!response.ok){
+        throw new Error(`${response.status} Failed to retrieve save`);
+      }
       // Step 3.4: Return payload.state if present.
-      return null;
+      const payload = await response.json();
+      return payload.state;
     }
 
     function syncPlayModeControls() {
@@ -138,9 +144,26 @@ export function initializeGame() {
     if (dom.resumeButton) {
       dom.resumeButton.addEventListener('click', async function () {
         // Step 8.1: Load saved state from API.
-        // Step 8.2: Validate and apply loaded state to the board.
-        // Step 8.3: Sync controls after restore and show status message.
-        // Step 8.4: Handle errors and show an error status message.
+        let message;
+        try{
+          const savedState = await fetchSavedState();
+          // Step 8.2: Validate and apply loaded state to the board.
+          const success = Board.applySerializableState(savedState);
+          if (!success){
+            message = 'Retrieved save state invalid';
+            setSaveStatus(message, true);
+            return;
+          }
+          // Step 8.3: Sync controls after restore and show status message.
+          syncControlsFromBoardState();  // Causing an error
+          message = 'Saved game resumed';
+          setSaveStatus(message, false);
+        }
+        catch(error){
+          // Step 8.4: Handle errors and show an error status message.
+          message = `${error.name}: Save retrieval failed`;
+          setSaveStatus(message, true);
+        }
       });
     }
 
@@ -190,7 +213,6 @@ export function initializeGame() {
       // Step 10.4: Resolve tile + piece objects and validate move range.
       const jumpOnly = Board.jumpexist;
       const legalTiles = Board.getLegalMovesForPiece(piece, jumpOnly);
-      // const moveType = tileEl.inRange(selectedPiece);
       let legal = false;
       for (let ti of legalTiles){
         if (tile === ti.tile){
@@ -199,15 +221,16 @@ export function initializeGame() {
         }
       }
       // Step 10.5: Handle jump moves and chained jumps.
+      // Step 10.6: Handle regular moves when jumps are not forced.
+      // Step 10.7: Switch turns after successful move.
       if (legal){
-      // if (moveType !== 'wrong'){
-      //   if (jumpOnly && moveType === 'jump'){
-      //     selectedPiece.opponentJump(tileEl);
-      //   }
-        // Step 10.6: Handle regular moves when jumps are not forced.
-        piece.move(tile);
-        // Step 10.7: Switch turns after successful move.
-        if (jumpOnly){
+        if(!jumpOnly){
+          piece.move(tile);
+          Board.changePlayerTurn();
+        }
+        else{
+          piece.opponentJump(tile);
+          piece.move(tile);
           const nextSpotTiles = Board.getLegalMovesForPiece(piece, jumpOnly);
           let moreJumps = false;
           for (let ti of nextSpotTiles){
@@ -215,15 +238,13 @@ export function initializeGame() {
               moreJumps = true;
             }
           }
-          if (moreJumps) {
+          if (!moreJumps) {
             Board.changePlayerTurn();
           }
           else{
+            piece.element.classList.add('selected');
             Board.continuousjump = true;
           }
-        }
-        else{
-          Board.changePlayerTurn();
         }
       }
     });
