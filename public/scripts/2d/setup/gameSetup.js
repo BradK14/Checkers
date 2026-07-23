@@ -41,6 +41,12 @@ export function initializeGame() {
       }
     }
 
+    // Project task 3: Display selected piece.  Using this function borrows the save status message section to deliver other game messages
+    function displayMessage(message) {
+      dom.saveStatus.style.color = `rgb(0, 0, 0)`;
+      dom.saveStatus.textContent = message;
+    }
+
     async function persistState(state) {
       // Step 2.1: POST { state } to /api/checkers/2d/save.
         const response = await fetch("/api/checkers/2d/save", {
@@ -104,24 +110,36 @@ export function initializeGame() {
 
     if (dom.cpuToggle) {
       // Step 6.1: Initialize CPU/two-player controls from current UI state.
+      syncPlayModeControls();
       dom.cpuToggle.addEventListener('change', function () {
         // Step 6.2: Resync CPU/two-player settings.
+        syncPlayModeControls();
         // Step 6.3: If CPU is enabled and it is CPU turn, queue a CPU move.
+        if (Board.cpuEnabled && Board.playerTurn === 2){
+          Board.scheduleCpuMove();
+        }
       });
     }
 
     if (dom.cpuDifficultySelect) {
       // Step 6.4: Initialize dropdown from Board.cpuDifficulty.
+      dom.cpuDifficultySelect.value = Board.cpuDifficulty;
       dom.cpuDifficultySelect.addEventListener('change', function (event) {
         // Step 6.5: Update Board.cpuDifficulty from selected value.
+        Board.cpuDifficulty = dom.cpuDifficultySelect.value;
         // Step 6.6: If it is CPU turn, schedule move using the new difficulty.
+        if (Board.cpuEnabled && Board.playerTurn === 2){
+          Board.scheduleCpuMove();
+        }
       });
     }
 
     if (dom.animationToggle) {
       // Step 6.7: Initialize animation flag from checkbox state.
+      Board.showCpuAnimation = dom.animationToggle.checked;
       dom.animationToggle.addEventListener('change', function (event) {
         // Step 6.8: Update Board.showCpuAnimation from checkbox state.
+        Board.showCpuAnimation = dom.animationToggle.checked;
       });
     }
 
@@ -188,6 +206,7 @@ export function initializeGame() {
           if (pieceEl.classList.contains('selected')) selected = true;
           clearSelectedPieces();
           if (!selected) {
+            displayMessage(`Player ${pieces[pieceEl.id].player} piece selected`);
             pieceEl.classList.add('selected');
           }
         } else {
@@ -246,6 +265,9 @@ export function initializeGame() {
             Board.continuousjump = true;
           }
         }
+      }
+      else{
+        displayMessage("Move invalid");
       }
     });
 

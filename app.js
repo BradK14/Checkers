@@ -21,9 +21,15 @@ const cpuMoveQueue = [];
 
 async function processCpuMoveQueue() {
 	// Step 1.1: Exit early when a CPU move is already being processed.
+	if (cpuMoveInProgress || cpuMoveQueue.length === 0) { return; }
+	cpuMoveInProgress = true;
 	// Step 1.2: Pull the next queued CPU request.
+	const {handler} = cpuMoveQueue.shift();
 	// Step 1.3: Run the queued handler.
+	await handler();
 	// Step 1.4: Clear the in-progress flag and continue with the next queued request.
+	cpuMoveInProgress = false;
+	processCpuMoveQueue();
 }
 
 function withThrottle(handler) {
@@ -31,7 +37,9 @@ function withThrottle(handler) {
 	// Step 2.2: Push incoming request handlers into the CPU queue.
 	// Step 2.3: Start queue processing.
 	return (req, res) => {
-		// TODO: Queue the route handler and start processing.
+		// Queue the route handler and start processing.
+		cpuMoveQueue.push({handler: () => {return handler(req, res); }});
+		processCpuMoveQueue();
 	};
 }
 
@@ -132,11 +140,26 @@ app.post('/api/checkers/2d/save', async (req, res) => {
 
 app.post('/api/checkers/2d/cpu-move', withThrottle(async (req, res) => {
 	// Step 10.1: Read state, legalMoves, and difficulty from the request body.
+	const {state, legalMoves, difficulty} = req.body;
 	// Step 10.2: Validate the incoming state and legal move list.
+	if (!state) { return res.status(400); }
+	if (!legalMoves) { return res.status(400); }
 	// Step 10.3: Validate move ids so response can be checked safely.
 	// Step 10.4: Call the provided CPU resolver with state, moves, difficulty, and Gemini API key.
+	const resolvedCpuMove = await resolveCpuMove({
+		state,
+		legalMoves,
+		difficulty,
+		apiKey: process.env.GEMINI_API_KEY
+	});
 	// Step 10.5: Accept either a moveId or from/to coordinate response.
 	// Step 10.6: Return the selected move payload to the client.
+	return res.json({
+		moveId: resolvedCpuMove.moveId,
+		move: resolvedCpuMove.move,
+		provider: resolvedCpuMove.provider,
+		fallback: resolvedCpuMove.fallback
+	});
 	// Step 10.7: Return appropriate error codes/messages for invalid payloads or API failures.
 }));
 
@@ -147,6 +170,7 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => {
 	// Step 12.1: Start the Express server on the configured port.
-	console.log(`Checkers game at: http://localhost:${PORT}/checkers/2d`);
 	// Step 12.2: Log helpful startup information, such as URLs and API key availability.
+	console.log(`Checkers game at: http://localhost:${PORT}/checkers/2d`);
+	console.log(`CPU Active through GEMINI API key: ${Boolean(process.env.GEMINI_API_KEY)}`);
 });

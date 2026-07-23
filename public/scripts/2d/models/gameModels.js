@@ -16,7 +16,6 @@ export function Piece(element, position, deps) {
       kingImg.src = `../../../images/king${this.player}.png`;
       kingImg.alt = 'King';
       this.element.appendChild(kingImg);
-      // kingImg.style.alignSelf = 'center';
       // 2) Set this.king = true so movement rules allow backward moves.
       this.king = true;
     };

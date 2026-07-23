@@ -7,3 +7,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+
+# Ignore GEMINI API key
+.env
+
+# Ignore save file
+data/2d-game-save.json
